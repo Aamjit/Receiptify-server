@@ -44,6 +44,8 @@ app.post('/send-email', async (req, res) => {
         ],
     }
 
+    console.log(msg);
+
     sgMail
         .send(msg)
         .then((response) => {
