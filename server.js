@@ -50,7 +50,7 @@ app.post('/send-email', async (req, res) => {
         .send(msg)
         .then((response) => {
             console.log('Email sent')
-            res.send(response)
+            res.status(200).json({ status: "Email sent" });
         })
         .catch((error) => {
             if (error.response && error.response.body) {
