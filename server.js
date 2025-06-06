@@ -3,11 +3,18 @@ const express = require('express');
 const sgMail = require('@sendgrid/mail')
 const puppeteer = require('puppeteer');
 const app = express();
+const os = require('os');
+
 app.use(express.json());
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 app.post('/send-email', async (req, res) => {
+    const appId = req.header('X-App-Id');
+    if (appId !== process.env.ALLOWED_APP_ID) {
+        return res.status(403).json({ error: 'Forbidden: Invalid App Id' });
+    }
+
     const { to, subject, text, html, name } = req?.body;
 
     let pdfBuffer;
@@ -59,7 +66,17 @@ app.post('/send-email', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
+    const networkInterfaces = os.networkInterfaces();
+    let ipAddresses = [];
+    for (const iface of Object.values(networkInterfaces)) {
+        for (const alias of iface) {
+            if (alias.family === 'IPv4' && !alias.internal) {
+                ipAddresses.push(alias.address);
+            }
+        }
+    }
     console.log(`Server running on port ${PORT}`);
+    console.log(`Server IP addresses: ${ipAddresses.join(', ')}`);
 });
 
 process.on('uncaughtException', (err) => {
