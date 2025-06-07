@@ -18,8 +18,9 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 // **********   MIDDLEWARE FUNCTION **********
 const checkAppId = (req, res, next) => {
-    log
     const appId = req.header('X-App-Id');
+    console.log(appId);
+
     if (appId !== process.env.ALLOWED_APP_ID) {
         return res.status(403).json({ error: 'Forbidden: Invalid App Id' });
     }
