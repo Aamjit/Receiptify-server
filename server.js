@@ -5,16 +5,20 @@ const puppeteer = require('puppeteer');
 const app = express();
 const os = require('os');
 const fs = require('fs');
+const morgan = require('morgan');
+
 const updateLastEmailSent = require('./utils/updateLastEmailSent');
 const checkLastReportEmailed = require('./utils/checkLastReportEmailed');
 
 app.use(express.json());
+app.use(morgan('combined'));
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 
 // **********   MIDDLEWARE FUNCTION **********
 const checkAppId = (req, res, next) => {
+    log
     const appId = req.header('X-App-Id');
     if (appId !== process.env.ALLOWED_APP_ID) {
         return res.status(403).json({ error: 'Forbidden: Invalid App Id' });
