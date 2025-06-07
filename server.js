@@ -5,6 +5,8 @@ const puppeteer = require('puppeteer');
 const app = express();
 const os = require('os');
 const fs = require('fs');
+const updateLastEmailSent = require('./utils/updateLastEmailSent');
+const checkLastReportEmailed = require('./utils/checkLastReportEmailed');
 
 app.use(express.json());
 
@@ -20,13 +22,15 @@ const checkAppId = (req, res, next) => {
     next();
 }
 
-
 // **********   SEND MAIL   **********
-app.post('/send-email', checkAppId, async (req, res) => {
+app.post('/send-email', checkAppId, checkLastReportEmailed, async (req, res) => {
     const { to, subject, text, html, name } = req?.body;
+    if (!to) {
+        return res.status(400).json({ error: 'Missing required field: to' });
+    }
+
     const screenshotPath = `debug_${Date.now()}_${Math.random().toString(36).slice(2)}.png`;
     console.log(screenshotPath);
-
 
     let pdfBuffer;
     try {
@@ -50,7 +54,7 @@ app.post('/send-email', checkAppId, async (req, res) => {
 
     const msg = {
         to: [...to],
-        from: 'aayanglem@gmail.com',
+        from: { "email": "aayanglem@gmail.com", "name": "Receiptify: Digital Receipt" },
         subject: subject,
         text: text,
         attachments: [{
@@ -68,11 +72,15 @@ app.post('/send-email', checkAppId, async (req, res) => {
 
     sgMail
         .send(msg)
-        .then((response) => {
+        .then(async (response) => {
             console.log('Email sent')
+            const updatePro = await updateLastEmailSent([...to])
+            console.log(updatePro);
             res.status(200).json({ status: "Email sent" });
         })
         .catch((error) => {
+            console.log(error);
+
             if (error.response && error.response.body) {
                 console.error('SendGrid error:', error.response.body);
                 res.status(500).json({ error: error.response.body });
