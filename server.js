@@ -5,7 +5,6 @@ const puppeteer = require('puppeteer');
 const app = express();
 const os = require('os');
 const fs = require('fs');
-const generateHTMLForReport = require('./utils/generateHTMLForReport');
 
 app.use(express.json());
 
