@@ -22,6 +22,7 @@ const checkAppId = (req, res, next) => {
     next();
 }
 
+
 // **********   SEND MAIL   **********
 app.post('/send-email', checkAppId, checkLastReportEmailed, async (req, res) => {
     const { to, subject, text, html, name } = req?.body;
