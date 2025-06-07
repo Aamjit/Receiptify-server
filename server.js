@@ -24,7 +24,9 @@ const checkAppId = (req, res, next) => {
 // **********   SEND MAIL   **********
 app.post('/send-email', checkAppId, async (req, res) => {
     const { to, subject, text, html, name } = req?.body;
-    const screenshotPath = `temp/debug_${Date.now()}_${Math.random().toString(36).slice(2)}.png`;
+    const screenshotPath = `debug_${Date.now()}_${Math.random().toString(36).slice(2)}.png`;
+    console.log(screenshotPath);
+
 
     let pdfBuffer;
     try {
