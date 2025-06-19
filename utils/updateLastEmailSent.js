@@ -7,7 +7,7 @@ const db = require('./firebase');
  */
 
 async function updateLastEmailSent(userEmails = []) {
-    if (!Array.isArray(userEmails) || userEmails.length === 0) throw new Error('User email(s) is required');
+    if (!Array.isArray(userEmails) || userEmails.length === 0) return;
     const usersRef = db.collection('Users');
     const batch = db.batch();
     const snapshot = await usersRef.where('email', 'in', userEmails).get();

@@ -1,5 +1,12 @@
 const db = require('./firebase');
 
+/**
+ * Checks if the email(s) in the 'to' parameter have already sent an email today
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns void
+ */
 const checkLastReportEmailed = async (req, res, next) => {
     console.log("Checking last report mail date");
 
