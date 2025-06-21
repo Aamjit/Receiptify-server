@@ -28,20 +28,20 @@ app.post('/generate-report-html', checkAppIdAndAuth, generateReportHTML);
 // ********** PROCESS REPORT DATA **********
 app.post('/generate-report-data', checkAppIdAndAuth, generateReportData);
 //
-app.get('/sendgrid-mail', checkAppId, (req, res) => {
+app.post('/sendgrid-mail', checkAppId, (req, res) => {
     const msg = {
-        to: ['sendgridtesting@gmail.com', 'amarjityanglem563@gmail.com'],
+        to: ["sendgridtesting@gmail.com", "amarjityanglem563@gmail.com"],
         from: {
             name: "Amarjit Yanglem",
             email: "aayanglem@gmail.com"
         },
-        subject: '91F53368-00EF',
-        text: '#21798353'
+        subject: "91F53368-00EF",
+        text: "#21798353"
     }
 
     sgMail
         .send(msg)
-        .then(async () => {
+        .then(() => {
             console.log('Email sent')
             res.status(200).json({ message: "success" });
         })
