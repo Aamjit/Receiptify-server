@@ -30,7 +30,7 @@ app.post('/generate-report-data', checkAppIdAndAuth, generateReportData);
 //
 app.get('/sendgrid-mail', checkAppId, (req, res) => {
     const msg = {
-        to: ['sendgridtesting@gmail.com'],
+        to: ['sendgridtesting@gmail.com', 'amarjityanglem563@gmail.com'],
         from: {
             name: "Amarjit Yanglem",
             email: "aayanglem@gmail.com"
