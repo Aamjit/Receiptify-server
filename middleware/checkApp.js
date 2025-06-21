@@ -28,4 +28,15 @@ const checkAppIdAndAuth = async (req, res, next) => {
     }
 }
 
+const checkAppId = (req, res, next) => {
+    const appId = req.header('X-App-Id');
+
+    if (appId !== process.env.ALLOWED_APP_ID) {
+        return res.status(403).json({ error: 'Forbidden: Invalid App Id' });
+    }
+
+    return next();
+}
+
 module.exports = checkAppIdAndAuth
+module.exports = checkAppId

@@ -10,6 +10,7 @@ const checkAppIdAndAuth = require('./middleware/checkApp');
 const sendReportEmail = require('./handles/sendReportEmail');
 const generateReportHTML = require('./handles/generateReportHTML');
 const generateReportData = require('./handles/generateReportData');
+const checkAppId = require('./middleware/checkApp');
 
 app.use(express.json());
 app.use(morgan('combined'));
@@ -26,7 +27,39 @@ app.post('/send-email', checkAppIdAndAuth, checkLastReportEmailed, sendReportEma
 app.post('/generate-report-html', checkAppIdAndAuth, generateReportHTML);
 // ********** PROCESS REPORT DATA **********
 app.post('/generate-report-data', checkAppIdAndAuth, generateReportData);
+//
+app.get('/sendgrid-mail', checkAppId, (req, res) => {
+    const msg = {
+        to: ['sendgridtesting@gmail.com'],
+        from: {
+            name: "Amarjit Yanglem",
+            email: "aayanglem@gmail.com"
+        },
+        subject: '91F53368-00EF',
+        text: '#21798353'
+    }
 
+    sgMail
+        .send(msg)
+        .then(async () => {
+            console.log('Email sent')
+            res.status(200).json({ message: "success" });
+        })
+        .catch((error) => {
+            console.log(error);
+
+            if (error.response && error.response.body) {
+                console.error('SendGrid error:', error.response.body);
+                res.status(500).json({ error: error.response.body });
+            } else {
+                console.error(error);
+                res.status(500).json({ error: 'Failed to send email' });
+            }
+        })
+        .finally(() => {
+            return;
+        })
+})
 
 // **********   STARTING SERVER     **********
 const PORT = process.env.PORT || 3000;
